@@ -1,25 +1,39 @@
 body{
-    background-color: rgb(14, 14, 44);
-    font-family: 'Roboto', sans-serif;
+    background-color: rgba(0, 0, 0, 0.881);
+    color:white;
+    border: 2px rgba(245, 176, 47, 0.742) solid;
 }
 header{
     margin-top: 5%;
 }
 main{
     margin: 5% 5% 5% 5%;
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    border: 2px rgba(245, 176, 47, 0.742) solid;
 }
 
 nav{
+    text-decoration: underline;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    align-items: baseline;
+    margin: 6%;
+    font-size: larger;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 nav a{
-    text-decoration: none;
     font-size: xx-large;
-    color: white;
+    color:rgba(245, 176, 47, 0.742);
 }
+
+
+
 h1{
     font-size: medium;
     color: white; 
@@ -56,7 +70,12 @@ button{
 .button{
     background-color: orange;
     text-decoration: none;
-    padding: 5px 10px;
+    padding: 1px 10px;
+}
+.button_red{
+    background-color: rgb(255, 0, 0);
+    text-decoration: none;
+    padding: 1px 10px;
 }
 
 .align-center{
@@ -64,4 +83,26 @@ button{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.ct{
+   background-image: url("./ct.png");
+   background-size: cover;
+   background-attachment: fixed;
+}
+
+.t{
+    background-image: url("./t.png");
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+#explication{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.img_ex{
+width: 15%;
 }

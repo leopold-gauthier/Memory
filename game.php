@@ -54,18 +54,18 @@
                 <div class="level">
                     <form method="post" action="">
                         <select name="level">
-                            <option value="3">3 paires</option>
-                            <option value="4">4 paires</option>
-                            <option value="5">5 paires</option>
-                            <option value="6">6 paires</option>
-                            <option value="7">7 paires</option>
-                            <option value="8">8 paires</option>
-                            <option value="9">9 paires</option>
-                            <option value="10">10 paires</option>
-                            <option value="11">11 paires</option>
-                            <option value="12">12 paires</option>
+                            <option value="3">3 pairs</option>
+                            <option value="4">4 pairs</option>
+                            <option value="5">5 pairs</option>
+                            <option value="6">6 pairs</option>
+                            <option value="7">7 pairs</option>
+                            <option value="8">8 pairs</option>
+                            <option value="9">9 pairs</option>
+                            <option value="10">10 pairs</option>
+                            <option value="11">11 pairs</option>
+                            <option value="12">12 pairs</option>
                         </select>
-                        <input type="submit" value="Jouer" class="button success">
+                        <input type="submit" value="Play" class="button success">
                     </form>
                 </div>
             <?php
@@ -105,8 +105,8 @@
                     ?>
                     <br>
                     <p>Your score is <?= $score; ?></p>
-                    <p>You have tries &nbsp; <?= $_SESSION['coup']; ?> times</p>
-                    <a class="button" href='game.php?reset=true'>reset</a>
+                    <p>You have tries <?= $_SESSION['coup']; ?> times</p>
+                    <a class="button" href='game.php?reset=true'>RESTART</a>
                 <?php
             }       ?>
                 </div>

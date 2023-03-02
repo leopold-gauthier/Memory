@@ -10,38 +10,28 @@
 
 <?php require_once 'includes/header.php'; ?>
 
-<?php
-// Créer une instance de la classe DbConnect
-$db = new DbConnect();
-// Créer une instance de la classe Player
-$player = new Player($db);
 
-// Vérifier si le joueur est connecté
-if ($player->isConnected()) {
-    $login = $player->getLogin();
-
-?>
-
-
-    <body>
-        <header>
-            <?php require_once 'includes/header.php'; ?>
-        </header>
-        <main>
-
+<body>
+    <header>
+        <?php require_once 'includes/header.php'; ?>
+    </header>
+    <main class="align-center">
+        <p>
+            Welcome
             <?php
-            // Le jour est connecté, afficher le menu de niveau
-            if (isset($_POST['level'])) {
-                $level = $_POST['level'];
-                header("Location: game.php?level=$level");
-                exit;
+            if (isset($_SESSION['login'])) {
+                echo " back " . $_SESSION['login']['login'];
             }
             ?>
-        <?php } else {
-    }
-        ?>
-        </main>
-        <footer>
-            <?php require_once 'includes/footer.php' ?>
-        </footer>
-    </body>
+            !
+        </p>
+        <div id="explication" class="align-center">
+            <img src="assets/css/ct.png" class="img_ex">
+            <h1>Memory</h1>
+            <img src="assets/css/t.png" class="img_ex">
+        </div>
+    </main>
+    <footer>
+        <?php require_once 'includes/footer.php' ?>
+    </footer>
+</body>

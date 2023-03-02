@@ -27,7 +27,7 @@
         // Vérifier si le joueur est connecté
         if ($player->isConnected()) { ?>
 
-            <h1>Vos infos personnelles</h1>
+            <h1>Your informations</h1>
             <div>
 
                 <div>
@@ -39,10 +39,6 @@
                     $player->delete();
                 }
                 ?>
-                <form class="align-center" method="post">
-                    <p>Attention ! ceci supprimera définitivement votre compte</p>
-                    <input type="submit" name="delete" value="Supprimer mon compte">
-                </form>
             </div>
         <?php
         }
@@ -50,22 +46,22 @@
         ?>
 
         <div>
-            <h1>Vos scores</h1>
+            <h1>Your scores</h1>
             <div>
                 <form method="get">
                     <select name="level">
-                        <option value="3">3 paires</option>
-                        <option value="4">4 paires</option>
-                        <option value="5">5 paires</option>
-                        <option value="6">6 paires</option>
-                        <option value="7">7 paires</option>
-                        <option value="8">8 paires</option>
-                        <option value="9">9 paires</option>
-                        <option value="10">10 paires</option>
-                        <option value="11">11 paires</option>
-                        <option value="12">12 paires</option>
+                        <option value="3">3 pairs</option>
+                        <option value="4">4 pairs</option>
+                        <option value="5">5 pairs</option>
+                        <option value="6">6 pairs</option>
+                        <option value="7">7 pairs</option>
+                        <option value="8">8 pairs</option>
+                        <option value="9">9 pairs</option>
+                        <option value="10">10 pairs</option>
+                        <option value="11">11 pairs</option>
+                        <option value="12">12 pairs</option>
                     </select>
-                    <input type="submit" value="Choisir le niveau des scores">
+                    <input class="button" type="submit" value="Choice level">
                 </form>
             </div>
             <?php
@@ -75,6 +71,10 @@
             }
             $player->getScore($_GET['level']);
             ?>
+            <form class="align-center" method="post">
+                <p>Warning ! this deleting your account</p>
+                <input class="button_red" type="submit" name="delete" value="Delete account">
+            </form>
         </div>
     </main>
     <footer>

@@ -238,9 +238,9 @@ class Player
         <table class="scoreProfile">
             <thead>
                 <tr>
-                    <th>Paires</th>
+                    <th>Pairs</th>
                     <th>Score</th>
-                    <th>Coups</th>
+                    <th>Tries</th>
                 </tr>
             </thead>
             <tbody>
