@@ -13,14 +13,14 @@ class Player
     private $db;
 
     // constructor
-    public function __construct($db) 
+    public function __construct($db)
     {
         $this->db = $db;
         if (isset($_SESSION['login'])) {
             $this->login = $_SESSION['login']['login'];
             $this->id = $_SESSION['login']['id'];
         }
-    } 
+    }
     public function register($login, $password)
     {
         // Valider les données
@@ -34,10 +34,10 @@ class Player
             // Récupérer le résultat
             $fetch = $select->fetchAll();
             $row = count($fetch);
-            
+
             // Hasher le mot de passe
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            
+
             // Si le login n'existe pas, on peut l'enregistrer
             if ($row == 0) {
                 $register = "INSERT INTO players (login, password) VALUES (:login, :password)";
@@ -50,13 +50,11 @@ class Player
                 ));
                 echo "Registration successful!";
                 header('Location: login.php');
-            }
-            else {
+            } else {
                 $error = "This login already exists!";
                 return $error;
             }
-        }
-        else {
+        } else {
             echo "You must fill in all fields!";
         }
     }
@@ -65,52 +63,54 @@ class Player
         // Vérifier si les champs formulaire ont bien été remplis
         if ($login != "" && $password != "") {
             // Récupérer le mot de passe hashé dans la bdd
-            $request = "SELECT password FROM players WHERE login = :login";
+            $request = "SELECT password FROM players WHERE login = ?";
             // Préparer la requête SQL
             $select = $this->db->getPdo()->prepare($request);
             // Exécuter la requête avec le binding des paramètres
-            $select->execute(array(':login' => $login));
+            $select->execute(array($login));
             // Récupérer le résultat
             $result = $select->fetch();
             // Récupérer le mot de passe hashé
-            $hashed_password = $result['password'];
-            
-            // Verifier si le mot de passe est correct
-            if (password_verify($password, $hashed_password)) {
-                // Le mot de passe est correct, on peut créer la session
-                $request = "SELECT * FROM players WHERE login = :login";
-                // Préparer la requête SQL
-                $select = $this->db->getPdo()->prepare($request);
-                // Exécuter la requête avec le binding des paramètres
-                $select->execute(array(':login' => $login));
-                $result = $select->fetch();
-                // Créer la session
-                $_SESSION['login'] = [
-                    'id' => $result['id'],
-                    'login' => $login,
-                ];
-                header('Location: profile.php');
-            } 
-            else 
-            {
-                echo "Login ou mot de passe incorrect !";
+            if ($result == true) {
+                $hashed_password = $result['password'];
+
+
+
+                // Verifier si le mot de passe est correct
+                if (password_verify($password, $hashed_password)) {
+                    // Le mot de passe est correct, on peut créer la session
+                    $request = "SELECT * FROM players WHERE login = :login";
+                    // Préparer la requête SQL
+                    $select = $this->db->getPdo()->prepare($request);
+                    // Exécuter la requête avec le binding des paramètres
+                    $select->execute(array(':login' => $login));
+                    $result = $select->fetch();
+                    // Créer la session
+                    $_SESSION['login'] = [
+                        'id' => $result['id'],
+                        'login' => $login,
+                    ];
+                    header('Location: index.php');
+                } else {
+                    echo "<p>Login ou mot de passe incorrect !</p>";
+                }
+            } else {
+                echo "<p>Login ou mot de passe incorrect !</p>";
             }
         } else {
-            echo "Vous devez remplir tous les champs !";
+            echo "<p>Vous devez remplir tous les champs !</p>";
         }
     }
     public function disconnect()
     {   // vérification de la connexion
-        if($this->isConnected()) 
-            {
-                // fermeture de la connexion
-                $this->login= null;
-                session_unset();
-                session_destroy();
-            }
-            else {
-                echo "Vous n'êtes pas connecté(e) !";
-            }
+        if ($this->isConnected()) {
+            // fermeture de la connexion
+            $this->login = null;
+            session_unset();
+            session_destroy();
+        } else {
+            echo "Vous n'êtes pas connecté(e) !";
+        }
     }
     public function delete()
     {
@@ -118,27 +118,21 @@ class Player
             // Effacer les scores du joueur
             $stmt = $this->db->getPdo()->prepare("DELETE FROM player_score WHERE player_id = :player_id");
             $stmt->execute(['player_id' => $this->id]);
-    
-            // Effacer les scores du joueur du classement global
-            $stmt = $this->db->getPdo()->prepare("DELETE FROM global_score WHERE player_id = :player_id");
-            $stmt->execute(['player_id' => $this->id]);
-    
+
             // Effacer le joueur
             $stmt = $this->db->getPdo()->prepare("DELETE FROM players WHERE id = :id");
             $stmt->execute(['id' => $this->id]);
             // fermeture de la connexion
             session_destroy();
-            echo "Utilisateur supprime !";
+            header("Location: login.php");
         } else {
             echo "Vous devez etre connecte pour supprimer votre compte !";
         }
     }
     public function update($login, $password)
     {
-        if($this->isConnected())
-        {
-            if ($login != "" && $password != "") 
-            {   // mise à jour des variables de session
+        if ($this->isConnected()) {
+            if ($login != "" && $password != "") {   // mise à jour des variables de session
                 $_SESSION['user']['login'] = $login;
                 $_SESSION['user']['password'] = $password;
                 // vérification de l'existence du login
@@ -165,67 +159,55 @@ class Player
                         ':id' => $this->id
                     ));
                     echo "Mise à jour terminée !";
-                }
-                else {
+                } else {
                     echo "Vous devez saisir un nouveau login !";
                 }
-            }
-            else {
+            } else {
                 echo "Vous devez remplir tous les champs !";
             }
-        }
-        else {
+        } else {
             echo "Vous devez être connecté pour modifier vos informations !";
         }
     }
     public function isConnected()
     {
-        if($this->login != null){
+        if ($this->login != null) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
     public function getAllInfos()
     {
-        if($this->isConnected()) 
-        {   ?>
-            <table border="1" style="border-collapse: collapse;">
+        if ($this->isConnected()) {   ?>
+            <table>
                 <thead>
                     <tr>
-                        <th>id</td>
-                        <th>login</td>   
+                        <th>login</td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th><?php echo $this->id; ?></td>
                         <td><?php echo $this->login; ?></td>
                     </tr>
                 </tbody>
             </table>
 
-            <?php
+        <?php
             /* echo "login : " . $this->login . "<br>";
             echo "password : " . $this->password . "<br>";
             echo "email : " . $this->email . "<br>";
             echo "firstname : " . $this->firstname . "<br>";
             echo "lastname : " . $this->lastname . "<br>"; */
-        }
-        else {
+        } else {
             echo "Vous devez être connecté(e) pour voir vos informations !";
-        
         }
-
     }
     public function getLogin()
     {
-        if($this->isConnected()) 
-        {
+        if ($this->isConnected()) {
             return $this->login;
-        }
-        else {
+        } else {
             echo "Vous devez être connecté(e) pour voir vos informations !";
         }
     }
@@ -245,7 +227,7 @@ class Player
         //Récupération des scores du joueur
         $stmt = $this->db->getPdo()->prepare("SELECT * FROM player_score WHERE player_id = :player_id AND level = :level ORDER BY coups DESC");
         //Exécution de la requête
-        $stmt->execute (array(
+        $stmt->execute(array(
             ':player_id' => $this->id,
             ':level' => $level
         ));
@@ -265,18 +247,18 @@ class Player
                 <?php
                 foreach ($fetchall as $row) {
                     $score = $row['level'] / $row['coups'];
-                    ?>
+                ?>
                     <tr>
                         <td><?php echo $row['level']; ?></td>
                         <td><?php echo $score; ?></td>
                         <td><?php echo $row['coups']; ?></td>
                     </tr>
-                    <?php
+                <?php
                 }
                 ?>
             </tbody>
         </table>
-        <?php
+    <?php
     }
     public function getGlobalScore()
     {
@@ -287,7 +269,7 @@ class Player
         // Récupération des résultats avec fetch
         $score = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // Affichage du score
-        ?>
+    ?>
         <table>
             <thead>
                 <tr>
@@ -301,18 +283,18 @@ class Player
                 <?php
                 foreach ($score as $row) {
                     $score = $row['level'] / $row['coups'];
-                    ?>
+                ?>
                     <tr>
                         <td><?php echo $row['login']; ?></td>
                         <td><?php echo $score; ?></td>
                         <td><?php echo $row['level']; ?></td>
                         <td><?php echo $row['coups']; ?></td>
                     </tr>
-                    <?php
+                <?php
                 }
                 ?>
             </tbody>
         </table>
-        <?php
+<?php
     }
 }

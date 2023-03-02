@@ -22,20 +22,20 @@ if (isset($_GET['reset'])) {
     if ($player->isConnected()) {
     ?>
         <nav>
-            <button class="btn info"><a href="index.php">Accueil</a></button>
-            <button class="btn info"><a href="profile.php">Profil</a></button>
-            <button class="btn info"><a href="game.php">Jouer</a></button>
-            <button class="btn info"><a href="scores.php">Classement</a></button>
-            <button class="btn info"><a href="index.php?logout=true">Deconnexion</a></button>
+            <a href="index.php">HOME</a>
+            <a href="profile.php">PROFIL</a>
+            <a href="game.php">PLAY</a>
+            <a href="scores.php">CLASSEMENT</a>
+            <a href="index.php?logout=true"><i class="fa-sharp fa-solid fa-right-from-bracket"></i></a>
         </nav>
     <?php
     } else {
         // Sinon afficher le menu de connexion
     ?>
         <nav>
-            <button class="btn info"><a href="index.php">Accueil</a></button>
-            <button class="btn info"><a href="login.php">Connexion</a></button>
-            <button class="btn info"><a href="register.php">Inscription</a></button>
+            <a href="index.php">HOME</a>
+            <a href="login.php">LOGIN</a>
+            <a href="register.php">JOIN US</a>
         </nav>
 
     <?php

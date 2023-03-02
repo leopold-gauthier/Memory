@@ -4,52 +4,51 @@
     <?php require_once 'includes/head.php' ?>
 </head>
 
-<body id="profile">
-    <?php require_once 'includes/header.php'; ?>
+<body>
+    <header>
+        <?php require_once 'includes/header.php'; ?>
+    </header>
+    <main>
 
-    <?php
-    /* $_SESSION['login'] = $login; // Set la session login */
-    // vérifier l'état du joueur, pour la protection des pages privées
-    if (!$player->isConnected()) {
-        // Le joueur n'est pas connecté, rediriger vers la page de connexion
-        header('Location: login.php');
-        exit();
-    }
+        <?php
+        /* $_SESSION['login'] = $login; // Set la session login */
+        // vérifier l'état du joueur, pour la protection des pages privées
+        if (!$player->isConnected()) {
+            // Le joueur n'est pas connecté, rediriger vers la page de connexion
+            header('Location: login.php');
+            exit();
+        }
 
-    // Créer une instance de la classe DbConnect
-    $db = new DbConnect();
-    // Créer une instance de la classe Player
-    $player = new Player($db);
+        // Créer une instance de la classe DbConnect
+        $db = new DbConnect();
+        // Créer une instance de la classe Player
+        $player = new Player($db);
 
-    // Vérifier si le joueur est connecté
-    if ($player->isConnected()) { ?>
+        // Vérifier si le joueur est connecté
+        if ($player->isConnected()) { ?>
 
-        <h1>Vos infos personnelles</h1>
-        <div>
-
+            <h1>Vos infos personnelles</h1>
             <div>
-                <?php $perso = $player->getAllInfos(); ?>
-            </div> <!-- /col -->
 
-            <?php
-            if (isset($_POST['delete'])) {
-                $player->delete();
-            }
-            ?>
-            <div>
-                <form method="post">
-                    <h5><span>Attention !</span>ceci supprimera définitivement votre compte</h5>
+                <div>
+                    <?php $perso = $player->getAllInfos(); ?>
+                </div> <!-- /col -->
+
+                <?php
+                if (isset($_POST['delete'])) {
+                    $player->delete();
+                }
+                ?>
+                <form class="align-center" method="post">
+                    <p>Attention ! ceci supprimera définitivement votre compte</p>
                     <input type="submit" name="delete" value="Supprimer mon compte">
                 </form>
             </div>
+        <?php
+        }
+        // Récupérer les données du joueur
+        ?>
 
-        </div>
-    <?php
-    }
-    // Récupérer les données du joueur
-    ?>
-
-    <main>
         <div>
             <h1>Vos scores</h1>
             <div>
@@ -69,7 +68,6 @@
                     <input type="submit" value="Choisir le niveau des scores">
                 </form>
             </div>
-
             <?php
             // Récupérer les données du joueur
             if (empty($_GET)) {
@@ -77,9 +75,6 @@
             }
             $player->getScore($_GET['level']);
             ?>
-            <br>
-            <br>
-
         </div>
     </main>
     <footer>

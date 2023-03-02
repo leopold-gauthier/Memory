@@ -1,5 +1,67 @@
+body{
+    background-color: rgb(14, 14, 44);
+    font-family: 'Roboto', sans-serif;
+}
+header{
+    margin-top: 5%;
+}
+main{
+    margin: 5% 5% 5% 5%;
+}
+
 nav{
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
+    align-items: baseline;
+}
+nav a{
+    text-decoration: none;
+    font-size: xx-large;
+    color: white;
+}
+h1{
+    font-size: medium;
+    color: white; 
+    text-decoration: underline;
+}
+label{
+    font-size: small;
+    color: white; 
+}
+p{
+    font-size: small;
+    color: white; 
+}
+a{
+    text-decoration: none;
+    color: rgb(0, 0, 0); 
+
+}
+table{
+    font-size: small;
+    color: white; 
+}
+form{
+    display:flex;
+    flex-direction: row;
     justify-content: center;
+    flex-wrap: wrap;
+
+}
+button{
+    background-color:orange;
+}
+
+.button{
+    background-color: orange;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+.align-center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
