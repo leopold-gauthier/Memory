@@ -14,14 +14,11 @@
     // Créer une instance de la classe Player
     $player = new Player($db);
 
-    // Check if the form has been submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Get the form data
+    if (isset($_POST['submit'])) {
         $login = trim(htmlspecialchars($_POST['login']));
         $password = trim(htmlspecialchars($_POST['password']));
         $password2 = trim(htmlspecialchars($_POST['password2']));
 
-        // Validate the form data
         if (empty($login)) {
             $error = "Veuillez saisir un login.";
         } elseif (empty($password)) {
@@ -31,16 +28,14 @@
         } elseif ($password !== $password2) {
             $error = "Les mots de passe ne correspondent pas.";
         } else {
-            // Le formulaire est valide, enregistrer le joueur
             $error = $player->register($login, $password);
-            header("Refresh:1; url=Location: login.php");
+            header("Location: login.php");
         }
     }
     ?>
 
     <main class="align-center">
         <h1>Inscription</h1>
-        <!-- Register form -->
         <form class="align-center" method="post" action="register.php">
             <div>
                 <div>
@@ -70,7 +65,7 @@
             </div>
 
             <div>
-                <input class="button" type="submit" value="Inscription">
+                <input class="button" type="submit" name="submit" value="Inscription">
             </div>
             <div>
                 <p>Deja inscrit ?&nbsp;<a href="login.php">Connexion</a></p>

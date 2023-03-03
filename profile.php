@@ -11,40 +11,19 @@
     <main>
 
         <?php
-        /* $_SESSION['login'] = $login; // Set la session login */
-        // vérifier l'état du joueur, pour la protection des pages privées
-        if (!$player->isConnected()) {
-            // Le joueur n'est pas connecté, rediriger vers la page de connexion
-            header('Location: login.php');
-            exit();
-        }
 
         // Créer une instance de la classe DbConnect
         $db = new DbConnect();
         // Créer une instance de la classe Player
         $player = new Player($db);
 
-        // Vérifier si le joueur est connecté
-        if ($player->isConnected()) { ?>
-
-            <h1>Your informations</h1>
-            <div>
-
-                <div>
-                    <?php $perso = $player->getAllInfos(); ?>
-                </div> <!-- /col -->
-
-                <?php
-                if (isset($_POST['delete'])) {
-                    $player->delete();
-                }
-                ?>
-            </div>
-        <?php
+        //Met automatiquement le level par défault a 3
+        if (empty($_GET)) {
+            $_GET['level'] = 3;
         }
-        // Récupérer les données du joueur
+        // récupére le score
+        $player->getScore($_GET['level']);
         ?>
-
         <div>
             <h1>Your scores</h1>
             <div>
@@ -64,12 +43,11 @@
                     <input class="button" type="submit" value="Choice level">
                 </form>
             </div>
+
             <?php
-            // Récupérer les données du joueur
-            if (empty($_GET)) {
-                $_GET['level'] = 3;
+            if (isset($_POST['delete'])) {
+                $player->delete();
             }
-            $player->getScore($_GET['level']);
             ?>
             <form class="align-center" method="post">
                 <p>Warning ! this deleting your account</p>

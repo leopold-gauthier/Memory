@@ -4,7 +4,6 @@
 
 class Player
 {
-    // attributs
     public $id;
     public $login;
     private $password;
@@ -12,7 +11,6 @@ class Player
     public $score;
     private $db;
 
-    // constructor
     public function __construct($db)
     {
         $this->db = $db;
@@ -23,27 +21,18 @@ class Player
     }
     public function register($login, $password)
     {
-        // Valider les données
         if ($login != "" && $password != "") {
-            // Vérifier si le login existe déjà
             $request = "SELECT * FROM players WHERE login = :login ";
-            // Préparer la requête SQL
             $select = $this->db->getPdo()->prepare($request);
-            // Exécuter la requête avec le binding des paramètres
             $select->execute(array(':login' => $login));
-            // Récupérer le résultat
             $fetch = $select->fetchAll();
             $row = count($fetch);
-
-            // Hasher le mot de passe
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
             // Si le login n'existe pas, on peut l'enregistrer
             if ($row == 0) {
                 $register = "INSERT INTO players (login, password) VALUES (:login, :password)";
-                // Préparer la requête SQL
                 $insert = $this->db->getPdo()->prepare($register);
-                // Executer la requête avec le binding des paramètres
                 $insert->execute(array(
                     ':login' => $login,
                     ':password' => $hashed_password
@@ -60,32 +49,19 @@ class Player
     }
     public function connect($login, $password)
     {
-        // Vérifier si les champs formulaire ont bien été remplis
         if ($login != "" && $password != "") {
-            // Récupérer le mot de passe hashé dans la bdd
             $request = "SELECT password FROM players WHERE login = ?";
-            // Préparer la requête SQL
             $select = $this->db->getPdo()->prepare($request);
-            // Exécuter la requête avec le binding des paramètres
             $select->execute(array($login));
-            // Récupérer le résultat
             $result = $select->fetch();
-            // Récupérer le mot de passe hashé
+            // Récupérer le mot de passe hashé si il n'est pas false alors continue sinon stop
             if ($result == true) {
                 $hashed_password = $result['password'];
-
-
-
-                // Verifier si le mot de passe est correct
                 if (password_verify($password, $hashed_password)) {
-                    // Le mot de passe est correct, on peut créer la session
                     $request = "SELECT * FROM players WHERE login = :login";
-                    // Préparer la requête SQL
                     $select = $this->db->getPdo()->prepare($request);
-                    // Exécuter la requête avec le binding des paramètres
                     $select->execute(array(':login' => $login));
                     $result = $select->fetch();
-                    // Créer la session
                     $_SESSION['login'] = [
                         'id' => $result['id'],
                         'login' => $login,
@@ -102,9 +78,8 @@ class Player
         }
     }
     public function disconnect()
-    {   // vérification de la connexion
+    {
         if ($this->isConnected()) {
-            // fermeture de la connexion
             $this->login = null;
             session_unset();
             session_destroy();
@@ -115,14 +90,11 @@ class Player
     public function delete()
     {
         if ($this->isConnected()) {
-            // Effacer les scores du joueur
             $stmt = $this->db->getPdo()->prepare("DELETE FROM player_score WHERE player_id = :player_id");
             $stmt->execute(['player_id' => $this->id]);
 
-            // Effacer le joueur
             $stmt = $this->db->getPdo()->prepare("DELETE FROM players WHERE id = :id");
             $stmt->execute(['id' => $this->id]);
-            // fermeture de la connexion
             session_destroy();
             header("Location: login.php");
         } else {
@@ -132,27 +104,20 @@ class Player
     public function update($login, $password)
     {
         if ($this->isConnected()) {
-            if ($login != "" && $password != "") {   // mise à jour des variables de session
+            if ($login != "" && $password != "") {
                 $_SESSION['user']['login'] = $login;
                 $_SESSION['user']['password'] = $password;
-                // vérification de l'existence du login
                 $request = "SELECT * FROM utilisateurs WHERE login = :login ";
-                // préparation de la requête 
                 $select = $this->db->getPdo()->prepare($request);
-                // exécution de la requête avec liaison des paramètres
                 $select->execute(array(
                     ':login' => $login
                 ));
-                // récupération des résultats
                 $fetch = $select->fetchAll();
                 $row = count($fetch);
-                // vérification de la disponibilité du login et mise à jour dans la base de données
+
                 if ($row == 0) {
-                    // requête de mise à jour
                     $update = "UPDATE utilisateurs SET login = :login, password = :password, email = :email, firstname = :firstname, lastname = :lastname WHERE id = :id ";
-                    // préparation de la requête
                     $select = $this->db->getPdo()->prepare($update);
-                    // exécution de la requête avec liaison des paramètres
                     $select->execute(array(
                         ':login' => $login,
                         ':password' => $password,
@@ -194,11 +159,6 @@ class Player
             </table>
 
         <?php
-            /* echo "login : " . $this->login . "<br>";
-            echo "password : " . $this->password . "<br>";
-            echo "email : " . $this->email . "<br>";
-            echo "firstname : " . $this->firstname . "<br>";
-            echo "lastname : " . $this->lastname . "<br>"; */
         } else {
             echo "Vous devez être connecté(e) pour voir vos informations !";
         }
@@ -217,23 +177,17 @@ class Player
     }
     public function saveScore($level, $coups)
     {
-        //Enregistrement du score dans la table player_score
         $stmt = $this->db->getPdo()->prepare("INSERT INTO player_score (player_id, level, coups) VALUES (?, ?, ?)");
-        //Exécution de la requête
         $stmt->execute([$this->id, $level, $coups]);
     }
     public function getScore($level)
     {
-        //Récupération des scores du joueur
         $stmt = $this->db->getPdo()->prepare("SELECT * FROM player_score WHERE player_id = :player_id AND level = :level ORDER BY coups DESC");
-        //Exécution de la requête
         $stmt->execute(array(
             ':player_id' => $this->id,
             ':level' => $level
         ));
         $fetchall = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        //Affichage du score
         ?>
         <table class="scoreProfile">
             <thead>
@@ -262,21 +216,17 @@ class Player
     }
     public function getGlobalScore()
     {
-        // Requête pour récupérer le score global
         $stmt = $this->db->getPdo()->prepare("SELECT * FROM player_score INNER JOIN players ON player_score.player_id = players.id WHERE level = :level ORDER BY coups limit 10");
-        // Exécution de la requête
         $stmt->execute(array(':level' => $_GET['level']));
-        // Récupération des résultats avec fetch
         $score = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // Affichage du score
     ?>
         <table>
             <thead>
                 <tr>
                     <th>Login</th>
                     <th>Score</th>
-                    <th>Paires</th>
-                    <th>Coups</th>
+                    <th>Pairs</th>
+                    <th>Tries</th>
                 </tr>
             </thead>
             <tbody>

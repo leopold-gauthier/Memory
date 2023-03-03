@@ -8,26 +8,24 @@
     <?php include_once("./includes/head.php") ?>
 </head>
 
-<?php require_once 'includes/header.php'; ?>
-
-
 <body>
     <header>
         <?php require_once 'includes/header.php'; ?>
     </header>
     <main class="align-center">
-        <p>
-            Welcome
-            <?php
-            if (isset($_SESSION['login'])) {
-                echo " back " . $_SESSION['login']['login'];
-            }
-            ?>
-            !
-        </p>
+        <h1>MEMORY GAME</h1>
+
         <div id="explication" class="align-center">
             <img src="assets/css/ct.png" class="img_ex">
-            <h1>Memory</h1>
+            <h1>
+                Welcome
+                <?php
+                if (isset($_SESSION['login'])) {
+                    echo " back " . $_SESSION['login']['login'];
+                }
+                ?>
+                !
+            </h1>
             <img src="assets/css/t.png" class="img_ex">
         </div>
     </main>

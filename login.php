@@ -24,7 +24,6 @@ $player = new Player($db); */
 
     <main class="align-center">
         <h1>Connexion</h1>
-        <!-- Login form -->
         <form class="align-center" method="post" action="login.php">
             <div>
                 <div>
@@ -37,28 +36,24 @@ $player = new Player($db); */
 
             <div>
                 <div>
-                    <label for="password">Mot de passe :</label>
+                    <label for="password">Password :</label>
                 </div>
                 <div>
                     <input type="password" id="password" name="password">
                 </div>
             </div>
             <div>
-                <input class="button" type="submit" value="Connexion">
+                <input class="button" type="submit" name="submit" value="Connect">
             </div>
             <?php
-            // Vérifier si le formulaire a été soumis
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                // Récupérer les données du formulaire
+            if (isset($_POST['submit'])) {
                 $login = trim(htmlspecialchars($_POST['login']));
                 $password = trim(htmlspecialchars($_POST['password']));
-
-                // Faire appel à la méthode connect()
                 $player->connect($login, $password);
             }
             ?>
             <div>
-                <p>Vous etes nouveau ici ?&nbsp;<a href="login.php">Inscription</a></p>
+                <p>U are new ?&nbsp;<a href="login.php">Inscription</a></p>
             </div>
         </form>
     </main>

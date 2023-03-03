@@ -11,7 +11,6 @@ if (isset($_SESSION['level'])) {
 
 // Vérifier si le joueur a cliqué sur une carte
 if (isset($_POST['id'])) {
-    // Le joueur a cliqué sur une carte
     foreach ($cards as $card) {
         if ($_POST['id'] == $card->id) {
             $card->flippedCards();
